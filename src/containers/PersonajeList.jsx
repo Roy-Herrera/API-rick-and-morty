@@ -22,41 +22,51 @@ const PersonajeList = () => {
 	} = React.useContext(Context)
 
     useEffect(() => {
-        if(paginas === personajes.info?.pages)
+        if(personajes.info?.pages === paginas)
         {
             setSiguienteBoton(true)
+        } else {
+            setAnteriorBoton(false)
         }
-        else if(paginas === 1) {
+        if(paginas === 1) {
             setAnteriorBoton(true)
         }
     }, [paginas])
 
-    async function siguiente() {
+    function siguiente() {
         if(personajes.info.next != null) {
             setAnteriorBoton(true)
-            setPaginas(paginas + 1)
-            const response = await axios (personajes.info.next)
-            setPersonajes(response.data)
-            setAnteriorBoton(false)
+            setSiguienteBoton(true)
+            setTimeout(async () => {
+                const response = await axios (personajes.info.next)
+                setPersonajes(response.data)
+                setAnteriorBoton(false)
+                setSiguienteBoton(false)
+                setPaginas(paginas + 1)
+            }, 1000)
         }
     }
 
-    async function anterior() {       
+    function anterior() {   
         if(personajes.info.prev != null) {
             setSiguienteBoton(true)
-            setPaginas(paginas - 1)
-            const response = await axios (personajes.info.prev)
-            setPersonajes(response.data)
-            setSiguienteBoton(false)
+            setAnteriorBoton(true)
+            setTimeout(async () => {
+                const response = await axios (personajes.info.prev)
+                setPersonajes(response.data)
+                setSiguienteBoton(false)
+                setAnteriorBoton(false)
+                setPaginas(paginas - 1)
+            }, 1000)
         }        
     }
 
     return (
         <React.Fragment>
             <div className="cambios"> 
-                <Button variant="outline-primary" onClick={anterior} disabled={anteriorBoton}>Anterior</Button>
+                <Button variant="outline-warning" onClick={anterior} disabled={anteriorBoton}>Anterior</Button>
                 <h1 className="Titulo">Rick And Morty.</h1>
-                <Button variant="outline-primary" onClick={siguiente} disabled={siguienteBoton}>Siguiente</Button>
+                <Button variant="outline-warning" onClick={siguiente} disabled={siguienteBoton}>Siguiente</Button>
             </div>
             <div className="PersonajeIndividual" >
                 {personajes.results?.map(personajeInd => (
