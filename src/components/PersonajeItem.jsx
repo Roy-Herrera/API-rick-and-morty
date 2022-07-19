@@ -14,3 +14,4 @@ const PersonajeItem = ({personajeInd}) => {
 }
 
 export default PersonajeItem;
+
